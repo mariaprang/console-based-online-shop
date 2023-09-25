@@ -24,9 +24,19 @@ public class Cart {
         for (Map.Entry<Product, Integer> entry : map.entrySet()) {
             Product product = entry.getKey();
             Integer quantity = entry.getValue();
-            text += product.getTitle() + " -> " + quantity + " items";
+            text += product.getProductId() + ", " + product.getTitle() + " -> " + quantity + " items";
         }
         return text;
+    }
+
+    public boolean removeItemsFromCartById(int id) {
+        for (Product product : map.keySet()) {
+            if (product.getProductId() == id) {
+                map.remove(product);
+                return true;
+            }
+        }
+        return false;
     }
 
     public double getTotalCost() {
@@ -41,7 +51,7 @@ public class Cart {
 
     public int getTotalQuantity() {
         int quantity = 0;
-        for(Integer eachItemQuantity : map.values()){
+        for (Integer eachItemQuantity : map.values()) {
             quantity += eachItemQuantity;
         }
         return quantity;

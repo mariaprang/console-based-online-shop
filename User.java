@@ -21,8 +21,12 @@ public class User {
         return balance;
     }
 
-    public void addBalance(double money){
+    public void addBalance(double money) {
         this.balance += money;
+    }
+
+    public void setBalance(double money){
+        this.balance = money;
     }
 
     public String getFullName() {
@@ -55,5 +59,10 @@ public class User {
 
     public void setUserCart(Cart userCart) {
         this.userCart = userCart;
+    }
+
+    public String toString() {
+        return "FULL NAME: " + fullName +
+                ", USERNAME: " + username + ", BALANCE: " + balance + "$";
     }
 }

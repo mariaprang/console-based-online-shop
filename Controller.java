@@ -19,28 +19,35 @@ public class Controller {
     }
 
     private void runMenu() {
+
         while (true) {
-            int choice = view.printMenu();
-            if (choice == 1) {
-                addItemToCart();
-            } else if (choice == 2) {
-                getAllItemsFromShop();
-            } else if (choice == 3) {
-                removeItemsFromCart();
-            } else if (choice == 4) {
-                depositMoney();
-            } else if (choice == 5) {
-                makePuchase();
-            } else if (choice == 6) {
-                checkUserAccount();
-            } else if (choice == 7) {
-                checkUserCart();
-            } else if (choice == TERMINATE_VALUE) {
-                break;
-            } else {
-                view.printMessage("--- ERROR: invalid input! ---");
+            try {
+                int choice = view.printMenu();
+                if (choice == 1) {
+                    addItemToCart();
+                } else if (choice == 2) {
+                    getAllItemsFromShop();
+                } else if (choice == 3) {
+                    removeItemsFromCart();
+                } else if (choice == 4) {
+                    depositMoney();
+                } else if (choice == 5) {
+                    makePurchase();
+                } else if (choice == 6) {
+                    checkUserAccount();
+                } else if (choice == 7) {
+                    checkUserCart();
+                } else if (choice == TERMINATE_VALUE) {
+                    break;
+                } else {
+                    view.printMessage("--- ERROR: invalid input! ---");
+                }
+
+            } catch (Exception exception) {
+                view.printMessage(exception.getMessage());
             }
         }
+
     }
 
     private void authorizeUser() {
@@ -85,23 +92,51 @@ public class Controller {
         view.printMessage(text);
     }
 
-    public void removeItemsFromCart() {
-
-    }
-
-    public void depositMoney() {
-
-    }
-
-    public void makePuchase() {
-
+    public void depositMoney() throws Exception {
+        // ask how much
+        double amount = view.getDoubleInput("How much money would you like to deposit?");
+        if (amount < 0) {
+            throw new Exception("Invalid amount!");
+        } else {
+            user.addBalance(amount);
+            view.printMessage(amount + "$ was added, total balance: " + user.getBalance() + "$");
+        }
     }
 
     public void checkUserCart() {
-
+        Cart cart = user.getUserCart();
+        view.printMessage(cart.getMapString());
     }
 
-    public void checkUserAccount() {
+    public void removeItemsFromCart() {
+        checkUserCart();
+        int id = view.getIntegerInput("Which product do you want to remove? (input id) --> ");
+        Cart cart = user.getUserCart();
+        boolean wasRemoved = cart.removeItemsFromCartById(id);
+        if (wasRemoved == true) {
+            view.printMessage("Item with ID " + id + " was removed!");
+        } else {
+            view.printMessage("Item with ID " + id + " was not found!");
+        }
+    }
 
+    public void makePurchase() throws Exception {
+        Cart cart = user.getUserCart();
+        double cartTotal = cart.getTotalCost();
+        if (user.getBalance() < cartTotal) {
+            throw new Exception("Balance of " + user.getBalance() + "$ is less than your total: " + cartTotal + "$");
+        } else {
+            double userCurrentBalance = user.getBalance();
+            double newBalance = userCurrentBalance - cartTotal;
+            user.setBalance(newBalance);
+            view.printMessage("Purchase successful, remaining balance: " + user.getBalance());
+        }
+    }
+
+
+    public void checkUserAccount() {
+        view.printMessage("==================");
+        view.printMessage(user.toString());
+        view.printMessage("==================");
     }
 }
