@@ -1,0 +1,15 @@
+MODELs
+
+- User
+- Product
+- Cart
+    HashMap<Product, Integer>
+
+Database
+
+- ArrayList<User>
+- ArrayList<Product>
+
+Controller
+
+View
